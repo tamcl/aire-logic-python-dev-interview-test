@@ -27,7 +27,9 @@ class User_details(BaseModel):
         if re.match(r"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,20}$", v):
             return v
         else:
-            raise ValidationError('Password requirement Minimum eight and maximum 20 characters, at least one uppercase letter, one lowercase letter, one number and one special character')
+            raise ValidationError('Password requirement Minimum eight and maximum 20 characters,'
+                                  ' at least one uppercase letter, one lowercase letter, one number'
+                                  ' and one special character')
 
     def create(self):
         pass
