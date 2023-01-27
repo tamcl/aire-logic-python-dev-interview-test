@@ -20,3 +20,24 @@ There are 6 key areas that the dev marking your test will look at, they are:
  - Usability
  - Project Structure
  - Testing
+
+---
+This code runs in 3.9
+```commandline
+pip install -r requirements.txt
+```
+
+Activate api
+```commandline
+uvicorn src.api.api:app --host 0.0.0.0 --port 80
+```
+
+Run test unit
+```commandline
+python test.py
+```
+
+Open Client
+```commandline
+--
+```
