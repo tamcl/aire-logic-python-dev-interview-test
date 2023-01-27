@@ -47,6 +47,14 @@ def test_create_user_2():
     user = dict(username="jakesmith001", email="jakesmith@example.com", password="Pass@123")
     return requests.post(os.path.join(BASE_URL, 'user/'), json=User_details(**user).dict()).json()
 
+def test_get_user_1():
+    username = "jakesmith001"
+    return requests.get(os.path.join(BASE_URL, f'user/{username}')).json()
+
+def test_get_user_2():
+    username = "jakesmith002"
+    return requests.get(os.path.join(BASE_URL, f'user/{username}')).json()
+
 def test_update_username():
     pass
 
@@ -68,6 +76,8 @@ def user_test():
     logging.info("Test user functions")
     print(test_create_user_1())
     print(test_create_user_2())
+    print(test_get_user_1())
+    print(test_get_user_2())
     test_update_username()
     test_update_password()
     test_delete_user()

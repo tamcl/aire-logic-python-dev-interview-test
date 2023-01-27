@@ -4,6 +4,7 @@ from pydantic import ValidationError
 from src.database.models.users import User, User_details
 from src.database.models.bugs import Bug
 from src.database.models.bug_updates import Bug_updates
+from src.database.DBFunctions import check_user_detail_with_username
 from uuid import uuid4
 import logging
 from logging.config import dictConfig
@@ -31,9 +32,14 @@ async def create_user(user: User_details):
         return {"error": repr(e), "status": 400}
 
 
-@app.get("/user/{userid}")
-async def get_user(userid: str):
-    return {"userid": userid}
+@app.get("/user/{username}")
+async def get_user(username: str):
+    logger.error(check_user_detail_with_username(username, db, "user"))
+    return {"user_exists": check_user_detail_with_username(username, db, "user")}
+
+@app.post("/user/update/username")
+async def update_username(username: str):
+    pass
 
 
 @app.post("/bug/")
