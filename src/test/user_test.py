@@ -54,13 +54,13 @@ def test_create_user_2():
 def test_get_user_1():
     logging.info("test_get_user_1")
     username = "jakesmith001"
-    return requests.get(os.path.join(BASE_URL, f"user/{username}")).json()
+    return requests.get(os.path.join(BASE_URL, f"user/"), params=dict(username=username)).json()
 
 
 def test_get_user_2():
     logging.info("test_get_user_2")
     username = "jakesmith002"
-    return requests.get(os.path.join(BASE_URL, f"user/{username}")).json()
+    return requests.get(os.path.join(BASE_URL, f"user/"), params=dict(username=username)).json()
 
 
 def test_update_username():
