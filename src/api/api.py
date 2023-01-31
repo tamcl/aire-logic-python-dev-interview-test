@@ -55,8 +55,11 @@ async def get_user_(username: str):
     """
         Retrieve user details
     """
-    df = get_user(DATABASE_SOURCE, dict(username=username))
-    return JSONResponse(status_code=200, content=df.to_dict("records")[0])
+    try:
+        df = get_user(DATABASE_SOURCE, dict(username=username))
+        return JSONResponse(status_code=200, content=df.to_dict("records")[0])
+    except Exception as e:
+        return JSONResponse(status_code=400, content=repr(e))
 
 
 @app.post("/user/update/", tags=["users"], response_model=User)
@@ -65,20 +68,23 @@ async def update_username(newUsername: str, user: UserBase):
         Update user username
     """
     # TODO need to check the username validation
-    user_results = get_user(DATABASE_SOURCE, dict(user.dict())).to_dict("records")
-    if len(user_results) > 1:
-        raise Exception(
-            f"More than one user match error, \n user params: {user.dict()}"
+    try:
+        user_results = get_user(DATABASE_SOURCE, dict(user.dict())).to_dict("records")
+        if len(user_results) > 1:
+            raise Exception(
+                f"More than one user match error, \n user params: {user.dict()}"
+            )
+        target_user = user_results[0]
+        target_user_id = target_user.get("uuid")
+        update_user(
+            DATABASE_SOURCE, user_login=user.dict(), change=dict(username=newUsername)
         )
-    target_user = user_results[0]
-    target_user_id = target_user.get("uuid")
-    update_user(
-        DATABASE_SOURCE, user_login=user.dict(), change=dict(username=newUsername)
-    )
-    new_user_dict = get_user(DATABASE_SOURCE, dict(uuid=target_user_id)).to_dict(
-        "records"
-    )[0]
-    return JSONResponse(status_code=200, content=new_user_dict)
+        new_user_dict = get_user(DATABASE_SOURCE, dict(uuid=target_user_id)).to_dict(
+            "records"
+        )[0]
+        return JSONResponse(status_code=200, content=new_user_dict)
+    except Exception as e:
+        return JSONResponse(status_code=400, content=repr(e))
 
 
 @app.get("/bug/list/", tags=["bugs"], response_model=ListBug)
@@ -100,7 +106,12 @@ async def get_bug_(bugid: str):
     Retrieve single bug details
 
     """
-    return JSONResponse(status_code=200, content=get_bug(DATABASE_SOURCE, bugid))
+    try:
+        return JSONResponse(status_code=200, content=get_bug(DATABASE_SOURCE, bugid))
+    except ValueError as e:
+        return JSONResponse(status_code=400, content=repr(e))
+    except Exception as e:
+        return JSONResponse(status_code=400, content=repr(e))
 
 
 @app.post("/bug/", tags=["bugs"], response_model=Bug)
@@ -134,7 +145,7 @@ async def assign_bug_(userid: str, bugid: str):
         bug_new_status = assign_bug(DATABASE_SOURCE, bugid, userid)
         return JSONResponse(status_code=200, content=bug_new_status)
     except Exception as e:
-        return JSONResponse(content={"error": repr(e)})
+        return JSONResponse(status_code=400, content={"error": repr(e)})
 
 
 @app.post("/bug/close/", tags=["bugs"], response_model=Bug)
@@ -147,4 +158,4 @@ async def close_bug_(bugid: str):
         bug_new_status = close_bug(DATABASE_SOURCE, bugid)
         return JSONResponse(status_code=200, content=bug_new_status)
     except Exception as e:
-        return {"status": "failed", "error": repr(e)}
+        return JSONResponse(status_code=400, content=repr(e))
