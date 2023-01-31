@@ -41,4 +41,7 @@ python test.py
 ```
 
 Please refer to example directory to use command lines, there's a postman collection as a reference.
-The testing is not the best, but tests all the functionality of all API end points
+
+future work:
+The testing is not the best, but tests all the functionality of all API end points, status code is not exactly the correct one
+but it is using try catch to protect the api to execute in the correct behaviour.
