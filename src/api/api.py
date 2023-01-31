@@ -3,8 +3,8 @@ from pydantic_sqlite import DataBase
 from pydantic import ValidationError
 from src.database.models.users import User, UserBase
 from src.database.models.bugs import Bug
-from src.database.routes.UserDBFunctions import check_user_exists, get_user, update_user, create_user
-from src.database.routes.BugDBFunctions import list_bug, create_bug
+from src.database.routes.UserDBFunctions import get_user, update_user, create_user
+from src.database.routes.BugDBFunctions import list_bug, create_bug, assign_bug, close_bug, get_bug
 
 from logging.config import dictConfig
 import logging
@@ -53,7 +53,7 @@ async def update_username(username: str, user: UserBase):
     :return:
     """
     user_results = get_user(DATABASE_SOURCE, dict(user.dict())).to_dict('records')
-    if len(user_results)> 1:
+    if len(user_results) > 1:
         raise Exception(f'More than one user match error, \n user params: {user.dict()}')
     target_user = user_results[0]
     target_user_id = target_user.get("uuid")
@@ -62,18 +62,37 @@ async def update_username(username: str, user: UserBase):
     return {"userid": target_user_id, "update": new_user_dict}
 
 
-@app.get("/bug/")
+@app.get("/bug/list/")
 async def list_bug_by_status(status: str = 'any'):
     bug_df = list_bug(DATABASE_SOURCE, status)
     return {"bugs": bug_df.to_dict('records')}
 
+@app.get("/bug/")
+async def get_bug_(bugid:str):
+    return {"bug":get_bug(DATABASE_SOURCE, bugid)}
+
 
 @app.post("/bug/")
 async def create_bug_(bug: Bug):
-    create_bug(DATABASE_SOURCE, bug)
+    try:
+        create_bug(DATABASE_SOURCE, bug)
+        return {"status": "success", "bug": bug.dict()}
+    except ValidationError as e:
+        return {"status": "failed", "error": repr(e)}
 
-# @app.post("{project_id}/bug/{bug_id}/update")
-# async def update_bug(project_id:str, bug_id: str, bug_update: Bug_updates):
-#     pass
+@app.post('/bug/assign/')
+async def assign_bug_(userid: str, bugid:str):
+    try:
+        bug_new_status = assign_bug(DATABASE_SOURCE, bugid, userid)
+        return {"status": "success", "bug": bug_new_status}
+    except Exception as e:
+        return {"status": "failed", "error": repr(e)}
 
-# @app.post("/bug/{}")
+
+@app.post('/bug/close/')
+async def close_bug_(bugid:str):
+    try:
+        bug_new_status = close_bug(DATABASE_SOURCE, bugid)
+        return {"status": "success", "bug": bug_new_status}
+    except Exception as e:
+        return {"status": "failed", "error": repr(e)}

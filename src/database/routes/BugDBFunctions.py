@@ -45,8 +45,8 @@ def list_bug(sqlite_db_path: str, status: str, table: str = BUG_TABLENAME) -> pd
         table=table,
         status=status
     )
-    query = """SELECT uuid, title, description, status FROM {{table}} WHERE 
-    {% if status in ['open', 'any']%} status = 'open' {% if status = 'any'%} OR {%endif%}{%endif%}
+    query = """SELECT uuid, title, status FROM {{table}} WHERE 
+    {% if status in ['open', 'any']%} status = 'open' {% if status == 'any'%} OR {%endif%}{%endif%}
     {% if status in ['close', 'any']%} status = 'close' {%endif%}"""
     list_bug_query = jinja2.Environment().from_string(query).render(**query_param)
     return query_to_df(sqlite_db_path, list_bug_query)
@@ -84,3 +84,66 @@ def assign_bug(sqlite_db_path: str, bug_id: str, user_id: str, bug_table: str = 
     query = """UPDATE {{table}} SET assignedTo = '{{user_id}}' WHERE uuid = '{{bug_id}}';"""
     assign_bug_query = jinja2.Environment().from_string(query).render(**query_param)
     execute_query(sqlite_db_path, assign_bug_query)
+    return query_to_df(
+        sqlite_db_path,
+        f"""SELECT 
+        uuid,
+        title, 
+        description, 
+        status, 
+        createdBy, 
+        createdAt, 
+        assignedTo 
+        FROM {bug_table} 
+        WHERE uuid = '{bug_id}';"""
+    ).to_dict('records')[0]
+
+def close_bug(sqlite_db_path:str, bug_id: str, bug_table: str = BUG_TABLENAME):
+    if not check_table_exists(sqlite_db_path, bug_table):
+        create_bug_table(sqlite_db_path, bug_table)
+
+    if not check_bug_exists(sqlite_db_path, bug_id, bug_table):
+        raise ValueError(f'Bug id {bug_id} does not exists')
+
+    query_param = dict(
+        bug_id= bug_id,
+        table= bug_table
+    )
+    query = """UPDATE {{table}} SET status = 'close' WHERE uuid = '{{bug_id}}'"""
+    close_bug_query = jinja2.Environment().from_string(query).render(**query_param)
+    execute_query(sqlite_db_path, close_bug_query)
+    return query_to_df(
+        sqlite_db_path,
+        f"""SELECT 
+            uuid,
+            title, 
+            description, 
+            status, 
+            createdBy, 
+            createdAt, 
+            assignedTo 
+            FROM {bug_table} 
+            WHERE uuid = '{bug_id}';"""
+    ).to_dict('records')[0]
+
+def get_bug(sqlite_db_path:str, bug_id:str, table:str=BUG_TABLENAME):
+    if not check_table_exists(sqlite_db_path, table):
+        create_bug_table(sqlite_db_path, table)
+
+    if not check_bug_exists(sqlite_db_path, bug_id, table):
+        raise ValueError(f'Bug id {bug_id} does not exists')
+
+    return query_to_df(
+        sqlite_db_path,
+        f"""SELECT 
+                uuid,
+                title, 
+                description, 
+                status, 
+                createdBy, 
+                createdAt, 
+                assignedTo 
+                FROM {table} 
+                WHERE uuid = '{bug_id}';"""
+    ).to_dict('records')[0]
+

@@ -1,4 +1,5 @@
 import logging
+import os
 import sqlite3
 from datetime import datetime
 
@@ -18,11 +19,25 @@ logging.basicConfig(
     level=logging.DEBUG,
     datefmt="%Y-%m-%d %H:%M:%S",
 )
+logging.info('reseting files')
+remove_file = ['./bug_tracker.db']
+for i in remove_file:
+    logging.info(f'removing {i}')
+    if os.path.basename(i) in os.listdir(os.path.dirname(i)):
+        os.remove(i)
+
+
 user_test()
-logging.info(query_to_df('bug_tracker.db','SELECT * from users').to_dict('records'))
+# logging.info(query_to_df('bug_tracker.db','SELECT * from users').to_dict('records'))
 userid_list = list(query_to_df('bug_tracker.db','SELECT uuid from users').to_dict('series').get('uuid'))
 bug_test(*userid_list)
-logging.info(query_to_df('bug_tracker.db','SELECT * from bugs').to_dict('records'))
+# logging.info(query_to_df('bug_tracker.db','SELECT * from bugs').to_dict('records'))
+
+
+
+
+
+
 #==================
 # if not check_table_exists('bug_tracker.db', 'user'):
 #     create_table('bug_tracker.db', 'user', [

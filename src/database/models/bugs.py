@@ -8,7 +8,7 @@ from uuid import uuid4
 
 class BugBase(BaseModel):
     title: str = Field(..., min_length=5)
-    description: str = Field(..., min_length=10)
+    description: str = Field(..., min_length=20)
     status:str = Field(default='open')
     createdBy: str = Field(...)
     createdAt: str = Field(None)
