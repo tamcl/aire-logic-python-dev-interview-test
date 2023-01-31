@@ -1,47 +1,54 @@
 from pydantic import BaseModel
-from pydantic import validator, ValidationError
+from pydantic import validator, ValidationError, Field, PrivateAttr
+from src.database.DBFunctions import insert_df_to_table, check_table_exists
+# from src.database.routes.UserDBFunctions import check_user_exists, get_user
+from config import DATABASE_SOURCE
+from typing import Optional
+import pandas as pd
+import jinja2
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, Integer, String
+
 import re
 from uuid import uuid4
 import logging
 
+USER_TABLENAME = 'user'
 
-class User_details(BaseModel):
-    username: str
-    email: str
-    password: str # normally password should be hashed for security reasons
 
-    @validator('email')
-    def check_email(cls, v):
-        email_validator = re.compile(r"([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+")
-        if re.fullmatch(email_validator, v):
-            return v
-        else:
-            raise ValueError("incorrect email format")
+class UserBase(BaseModel):
+    username: Optional[str] = None
+    email: Optional[str] = Field(None, regex="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
 
-    @validator('username')
-    def check_username(cls,v):
-        return v
+    # password: Optional[str]  # normally password should be hashed for security reasons
+    #
+    # @validator('password')
+    # def check_password(cls, v):
+    #     if re.match(r"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,20}$", v):
+    #         return v
+    #     else:
+    #         raise ValidationError('Password requirement Minimum eight and maximum 20 characters,'
+    #                               ' at least one uppercase letter, one lowercase letter, one number'
+    #                               ' and one special character')
 
-    @validator('password')
-    def check_password(cls, v):
-        if re.match(r"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{8,20}$", v):
-            return v
-        else:
-            raise ValidationError('Password requirement Minimum eight and maximum 20 characters,'
-                                  ' at least one uppercase letter, one lowercase letter, one number'
-                                  ' and one special character')
 
-    def create(self):
-        pass
+class User(UserBase):
+    uuid: str = Field(None)
 
-    def update_username(self):
-        pass
+    def __init__(self, username: str = None, email: str = None, password: str = None):
+        super().__init__(username=username, email=email, password=password)
+        self.uuid = self.set_id()
 
-    def update_password(self):
-        pass
+    def set_id(self):
+        if self.username is None and self.email is None:
+            raise ValueError("username and email is missing")
+        if self.username is None:
+            pass
 
-    def delete_user(self):
-        pass
+        if self.email is None:
+            pass
 
-class User(User_details):
-    uuid:str
+        return str(uuid4())
+
+
+

@@ -1,52 +1,79 @@
 from fastapi import FastAPI
 from pydantic_sqlite import DataBase
 from pydantic import ValidationError
-from src.database.models.users import User, User_details
+from src.database.models.users import User, UserBase
 from src.database.models.bugs import Bug
-from src.database.models.bug_updates import Bug_updates
-from src.database.DBFunctions import check_user_detail_with_username
-from uuid import uuid4
-import logging
+from src.database.routes.UserDBFunctions import check_user_exists, get_user, update_user, create_user
+from src.database.routes.BugDBFunctions import list_bug, create_bug
+
 from logging.config import dictConfig
 import logging
 from config import LogConfig
+from config import DATABASE_SOURCE
 
 dictConfig(LogConfig().dict())
-logger = logging.getLogger("mycoolapp")
+logger = logging.getLogger("bug_tracker_api")
 
 app = FastAPI()
 db = DataBase()
 
 
 @app.post("/user/")
-async def create_user(user: User_details):
+async def create_user_(user: User):
+    """
+    api end point to create users
+    :param user:
+    :return:
+    """
     try:
-        user_param = {"uuid": str(uuid4())}
-        user_param.update(user.dict())
-        u = User(**user_param)
-        db.add("user", u)
-        db.save("hello_world.db")
-        return {"user": u.dict(), "status": 200}
+        create_user(DATABASE_SOURCE, user)
+        return {"user": user.dict(), "status": 200}
     except ValidationError as e:
         logger.error(e)
         return {"error": repr(e), "status": 400}
 
 
 @app.get("/user/{username}")
-async def get_user(username: str):
-    logger.error(check_user_detail_with_username(username, db, "user"))
-    return {"user_exists": check_user_detail_with_username(username, db, "user")}
+async def get_user_(username: str):
+    """
 
-@app.post("/user/update/username")
-async def update_username(username: str):
-    pass
+    :param username:
+    :return:
+    """
+    df = get_user(DATABASE_SOURCE, dict(username=username))
+    return {'user': df.to_dict('records')}
+
+
+@app.post("/user/update/")
+async def update_username(username: str, user: UserBase):
+    """
+
+    :param username:
+    :param user:
+    :return:
+    """
+    user_results = get_user(DATABASE_SOURCE, dict(user.dict())).to_dict('records')
+    if len(user_results)> 1:
+        raise Exception(f'More than one user match error, \n user params: {user.dict()}')
+    target_user = user_results[0]
+    target_user_id = target_user.get("uuid")
+    update_user(DATABASE_SOURCE, user_login=user.dict(), change=dict(username=username))
+    new_user_dict = get_user(DATABASE_SOURCE, dict(uuid=target_user_id)).to_dict('records')[0]
+    return {"userid": target_user_id, "update": new_user_dict}
+
+
+@app.get("/bug/")
+async def list_bug_by_status(status: str = 'any'):
+    bug_df = list_bug(DATABASE_SOURCE, status)
+    return {"bugs": bug_df.to_dict('records')}
 
 
 @app.post("/bug/")
-async def create_bug(bug: Bug):
-    bug.create()
+async def create_bug_(bug: Bug):
+    create_bug(DATABASE_SOURCE, bug)
 
+# @app.post("{project_id}/bug/{bug_id}/update")
+# async def update_bug(project_id:str, bug_id: str, bug_update: Bug_updates):
+#     pass
 
-@app.post("/bug/{bug_id}/update")
-async def create_bug_update(bug_id: str, bug_update: Bug_updates):
-    pass
+# @app.post("/bug/{}")

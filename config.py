@@ -1,9 +1,11 @@
 import os
 
-ENVIRONMENTAL_VARIABLE = dict(DATABASE_SOURCE="database.db")
+ENVIRONMENTAL_VARIABLE = dict(DATABASE_SOURCE="bug_tracker.db")
 os.environ.update()
 
 from pydantic import BaseModel
+
+DATABASE_SOURCE="bug_tracker.db"
 
 
 class LogConfig(BaseModel):
