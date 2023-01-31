@@ -26,6 +26,12 @@ class ListBug(BaseModel):
 
 
 def create_bug_table(sqlite_db_path: str, table: str = BUG_TABLENAME):
+    """
+    function that can create a bug table in desired sqlite database
+    :param sqlite_db_path:
+    :param table:
+    :return:
+    """
     create_table(
         sqlite_db_path,
         table,
@@ -43,6 +49,12 @@ def create_bug_table(sqlite_db_path: str, table: str = BUG_TABLENAME):
 
 
 def create_bug(sqlite_db_path: str, bug: Bug, table: str = BUG_TABLENAME) -> None:
+    """
+    function that can create bug in the sqlite database server
+    :param sqlite_db_path:
+    :param bug:
+    :param table:
+    """
     if not check_table_exists(sqlite_db_path, table):
         logging.info(f"Table {table} does not exists, create {table} table")
         create_bug_table(sqlite_db_path, table)
@@ -57,6 +69,13 @@ def create_bug(sqlite_db_path: str, bug: Bug, table: str = BUG_TABLENAME) -> Non
 def list_bug(
     sqlite_db_path: str, status: str, table: str = BUG_TABLENAME
 ) -> pd.DataFrame:
+    """
+    function that can list all bug with input status
+    :param sqlite_db_path:
+    :param status: open, close, or any
+    :param table:
+    :return:
+    """
     if not check_table_exists(sqlite_db_path, table):
         create_bug_table(sqlite_db_path, table)
 
@@ -74,6 +93,13 @@ def list_bug(
 def check_bug_exists(
     sqlite_db_path: str, bug_id: str, table: str = BUG_TABLENAME
 ) -> bool:
+    """
+    function that can check if bug exists in sqlite database table
+    :param sqlite_db_path:
+    :param bug_id:
+    :param table:
+    :return:
+    """
     query_param = dict(table=table, bug_id=bug_id)
     query = """SELECT uuid, title FROM {{table}} WHERE uuid = '{{bug_id}}'"""
     check_bug_query = jinja2.Environment().from_string(query).render(**query_param)
@@ -90,6 +116,15 @@ def assign_bug(
     bug_table: str = BUG_TABLENAME,
     user_table: str = USER_TABLENAME,
 ):
+    """
+    function that can assign bugs to user that exists in the sqlite database server
+    :param sqlite_db_path:
+    :param bug_id:
+    :param user_id:
+    :param bug_table:
+    :param user_table:
+    :return:
+    """
     if not check_table_exists(sqlite_db_path, bug_table):
         create_bug_table(sqlite_db_path, bug_table)
 
@@ -121,6 +156,13 @@ def assign_bug(
 
 
 def close_bug(sqlite_db_path: str, bug_id: str, bug_table: str = BUG_TABLENAME):
+    """
+    function that can close the bug and change its status
+    :param sqlite_db_path:
+    :param bug_id:
+    :param bug_table:
+    :return:
+    """
     if not check_table_exists(sqlite_db_path, bug_table):
         create_bug_table(sqlite_db_path, bug_table)
 
@@ -147,6 +189,13 @@ def close_bug(sqlite_db_path: str, bug_id: str, bug_table: str = BUG_TABLENAME):
 
 
 def get_bug(sqlite_db_path: str, bug_id: str, table: str = BUG_TABLENAME):
+    """
+    function that can obtain detailed information of a bug
+    :param sqlite_db_path:
+    :param bug_id:
+    :param table:
+    :return:
+    """
     if not check_table_exists(sqlite_db_path, table):
         create_bug_table(sqlite_db_path, table)
 

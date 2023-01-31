@@ -3,23 +3,35 @@ import sqlite3
 
 import jinja2
 import pandas as pd
-
-USER_TABLENAME = "users"
-# BUG_TABLE = "bugs"
-# BUG_UPDATE_TABLE = "bug_updates"
+from config import DATABASE_SOURCE
 
 
-def get_connection(sqlite_server="bug_tracker.db"):
+def get_connection(sqlite_server=DATABASE_SOURCE):
+    """
+    create or connect to sqlite database server
+    :param sqlite_server:
+    :return:
+    """
     return sqlite3.connect(sqlite_server)
 
 
 def get_cursor(connection: sqlite3.Connection):
+    """
+    create cursor from the sqlite server connection
+    :param connection:
+    :return:
+    """
     return connection.cursor()
 
 
 def execute_query(sqlite_db_path: str, query: str):
+    """
+    function that can execute an SQL query
+    :param sqlite_db_path:
+    :param query:
+    :return:
+    """
     logging.debug(f"Execute query to db '{sqlite_db_path}': \n{query}")
-    print(query)
     if sqlite_db_path:
         conn = get_connection(sqlite_db_path)
     else:
@@ -38,6 +50,13 @@ def execute_query(sqlite_db_path: str, query: str):
 def insert_df_to_table(
     sqlite_db_path: str, table: str, df: pd.DataFrame, if_exists="append"
 ):
+    """
+    function that can insert rows of data into a sqlite server table
+    :param sqlite_db_path:
+    :param table:
+    :param df:
+    :param if_exists:
+    """
     if sqlite_db_path:
         conn = get_connection(sqlite_db_path)
     else:
@@ -50,6 +69,12 @@ def insert_df_to_table(
 
 
 def query_to_df(sqlite_db_path: str, query: str):
+    """
+    function that can return a pandas dataframe from a query
+    :param sqlite_db_path:
+    :param query:
+    :return:
+    """
     if sqlite_db_path:
         conn = get_connection(sqlite_db_path)
     else:
@@ -62,6 +87,12 @@ def query_to_df(sqlite_db_path: str, query: str):
 
 
 def create_table(sqlite_db_path, table_name: str, column_details: list):
+    """
+    function that can create a table in the sqlite database server
+    :param sqlite_db_path:
+    :param table_name:
+    :param column_details:
+    """
     query_param = dict(table_name=table_name, columns=column_details)
     query = """
     CREATE TABLE {{table_name}}
@@ -78,6 +109,12 @@ def create_table(sqlite_db_path, table_name: str, column_details: list):
 
 
 def check_table_exists(sqlite_db_path: str, table: str):
+    """
+    function that can identify if a table exists in sqlite database server
+    :param sqlite_db_path:
+    :param table:
+    :return:
+    """
     query = f"""SELECT tbl_name FROM sqlite_master WHERE type='table' AND tbl_name='{table}'; """
     listOfTables = execute_query(sqlite_db_path=sqlite_db_path, query=query)
     if not listOfTables:

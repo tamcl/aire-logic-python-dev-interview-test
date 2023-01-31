@@ -1,9 +1,7 @@
 from datetime import datetime
-from typing import List, Optional
 from uuid import uuid4
 
-from pydantic import BaseModel, Field, ValidationError, validator
-from sqlalchemy.orm import Session
+from pydantic import BaseModel, Field
 
 
 class BugBase(BaseModel):

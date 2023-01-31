@@ -1,20 +1,22 @@
-import logging
-import sqlite3
 
 import jinja2
 import pandas as pd
-from pydantic_sqlite import DataBase
 
 from src.database.DBFunctions import (check_table_exists, create_table,
                                       execute_query, insert_df_to_table,
                                       query_to_df)
-from src.database.models import *
 from src.database.models.users import User
 
 USER_TABLENAME = "users"
 
 
 def create_user_table(sqlite_db_path: str, table: str = USER_TABLENAME):
+    """
+    function that can create a bug table in desired sqlite database
+    :param sqlite_db_path:
+    :param table:
+    :return:
+    """
     create_table(
         sqlite_db_path,
         table,
@@ -29,6 +31,13 @@ def create_user_table(sqlite_db_path: str, table: str = USER_TABLENAME):
 
 
 def check_user_exists(sqlite_db_path: str, match: dict, table: str = USER_TABLENAME):
+    """
+    function that can check if there are user with the matching input detials
+    :param sqlite_db_path:
+    :param match:
+    :param table:
+    :return:
+    """
     query_param = dict(table=table, match=match)
     query = """SELECT * from {{table}} WHERE 
 {% for k, v in match.items()%}{{k}} = '{{v}}' {% if not loop.last %}OR {% endif %}{% endfor %}"""
@@ -40,6 +49,12 @@ def check_user_exists(sqlite_db_path: str, match: dict, table: str = USER_TABLEN
 
 
 def create_user(sqlite_db_path: str, user: User, table: str = USER_TABLENAME):
+    """
+    function that can create a user in the user table in the sqlite database server
+    :param sqlite_db_path:
+    :param user:
+    :param table:
+    """
     if not check_table_exists(sqlite_db_path, table):
         create_user_table(sqlite_db_path)
     assert user.uuid is not None
@@ -62,6 +77,13 @@ def create_user(sqlite_db_path: str, user: User, table: str = USER_TABLENAME):
 def get_user(
     sqlite_db_path: str, match: dict, table: str = USER_TABLENAME
 ) -> pd.DataFrame:
+    """
+    function that can get the user from matching user details
+    :param sqlite_db_path:
+    :param match:
+    :param table:
+    :return:
+    """
     query_param = dict(table=table, match=match)
     query = """SELECT uuid, username, email from {{table}} WHERE 
     {% for k, v in match.items()%}{{k}} = '{{v}}' {% if not loop.last %}AND {% endif %}{% endfor %}"""
@@ -72,6 +94,13 @@ def get_user(
 def update_user(
     sqlite_db_path: str, user_login: dict, change: dict, table: str = USER_TABLENAME
 ):
+    """
+    function that can update user details by finding the user that has the matching details
+    :param sqlite_db_path:
+    :param user_login:
+    :param change:
+    :param table:
+    """
     # TODO only change username, need to check other username exists
     # TODO cannot change uuid
     query_param = dict(table=table, match=user_login, change=change)
@@ -79,7 +108,6 @@ def update_user(
     SET {% for k,v in change.items() %} {{k}} = '{{v}}' {% if not loop.last %}, {% endif %} {% endfor %} 
     WHERE {% for k,v in match.items() %} {{k}} = '{{v}}' {% if not loop.last %}AND {% endif %} {% endfor %} """
     update_user_query = jinja2.Environment().from_string(query).render(**query_param)
-    print(update_user_query)
     execute_query(sqlite_db_path, update_user_query)
 
 

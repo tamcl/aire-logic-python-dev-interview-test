@@ -2,16 +2,8 @@ import logging
 import re
 from typing import Optional
 from uuid import uuid4
+from pydantic import BaseModel, Field
 
-import jinja2
-import pandas as pd
-from pydantic import BaseModel, Field, PrivateAttr, ValidationError, validator
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
-
-# from src.database.routes.UserDBFunctions import check_user_exists, get_user
-from config import DATABASE_SOURCE
-from src.database.DBFunctions import check_table_exists, insert_df_to_table
 
 USER_TABLENAME = "user"
 

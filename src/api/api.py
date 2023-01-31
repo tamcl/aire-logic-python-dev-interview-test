@@ -40,7 +40,7 @@ async def create_user_(
         return JSONResponse(status_code=200, content=user.dict())
     except ValidationError as e:
         logger.error(e)
-        return {"error": repr(e), "status": 400}
+        return JSONResponse(status_code=400, content=repr(e))
 
 
 @app.get("/user/{username}", tags=["users"], response_model=User)
