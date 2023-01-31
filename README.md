@@ -1,4 +1,4 @@
-Arie Logic's python dev interview test
+Aire Logic's python dev interview test
 
 Your goal is to implement a simple bug tracker. The features we would like, in no particular order:
 
