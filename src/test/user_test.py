@@ -68,7 +68,7 @@ def test_update_username():
     username = "jakesmith_update"
     update_username = dict(username="jakesmith001", email="jakesmith@example.com")
     return requests.post(
-        os.path.join(BASE_URL, f"user/update/?username={username}"),
+        os.path.join(BASE_URL, f"user/update/?newUsername={username}"),
         json=update_username,
     ).json()
 

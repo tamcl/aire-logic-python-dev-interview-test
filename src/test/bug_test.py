@@ -60,10 +60,10 @@ def bug_test(userid_1, userid_2):
     logging.info("Create test")
     create_bug_test_1_results = create_bug_test_1(userid_1)
     logging.info(create_bug_test_1_results)
-    bug_id_1 = create_bug_test_1_results.get("bug").get("uuid")
+    bug_id_1 = create_bug_test_1_results.get("uuid")
     create_bug_test_2_results = create_bug_test_2(userid_2)
     logging.info(create_bug_test_2_results)
-    bug_id_2 = create_bug_test_2_results.get("bug").get("uuid")
+    bug_id_2 = create_bug_test_2_results.get("uuid")
     logging.info(create_bug_test_3(userid_1))
 
     logging.info("Assign test")

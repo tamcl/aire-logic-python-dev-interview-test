@@ -17,9 +17,11 @@ USER_TABLENAME = "user"
 
 
 class UserBase(BaseModel):
-    username: Optional[str] = None
+    username: Optional[str] = Field(example="exampleUsername")
     email: Optional[str] = Field(
-        None, regex="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+        None,
+        regex="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$",
+        example="example@example.com",
     )
 
     # password: Optional[str]  # normally password should be hashed for security reasons

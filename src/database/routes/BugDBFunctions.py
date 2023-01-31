@@ -1,7 +1,9 @@
 import logging
+from typing import List
 
 import jinja2
 import pandas as pd
+from pydantic import BaseModel
 
 from src.database.DBFunctions import (check_table_exists, create_table,
                                       execute_query, insert_df_to_table,
@@ -11,6 +13,16 @@ from src.database.routes.UserDBFunctions import (USER_TABLENAME,
                                                  check_user_exists)
 
 BUG_TABLENAME = "bugs"
+
+
+class SimpleBug(BaseModel):
+    uuid: str
+    title: str
+    status: str
+
+
+class ListBug(BaseModel):
+    bugs: List[SimpleBug]
 
 
 def create_bug_table(sqlite_db_path: str, table: str = BUG_TABLENAME):
@@ -122,13 +134,13 @@ def close_bug(sqlite_db_path: str, bug_id: str, bug_table: str = BUG_TABLENAME):
     return query_to_df(
         sqlite_db_path,
         f"""SELECT 
-            uuid,
             title, 
             description, 
             status, 
             createdBy, 
             createdAt, 
-            assignedTo 
+            assignedTo,
+            uuid
             FROM {bug_table} 
             WHERE uuid = '{bug_id}';""",
     ).to_dict("records")[0]
