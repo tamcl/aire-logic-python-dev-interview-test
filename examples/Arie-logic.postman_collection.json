@@ -21,11 +21,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}user/",
+					"raw": "{{url}}/user/",
 					"host": [
-						"{{url}}user"
+						"{{url}}"
 					],
 					"path": [
+						"user",
 						""
 					]
 				}
@@ -47,11 +48,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}user/update/?newUsername=example_user1_updated",
+					"raw": "{{url}}/user/update/?newUsername=example_user1_updated",
 					"host": [
-						"{{url}}user"
+						"{{url}}"
 					],
 					"path": [
+						"user",
 						"update",
 						""
 					],
@@ -71,11 +73,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}user/?username=example_user1_updated",
+					"raw": "{{url}}/user/?username=example_user1_updated",
 					"host": [
-						"{{url}}user"
+						"{{url}}"
 					],
 					"path": [
+						"user",
 						""
 					],
 					"query": [
@@ -94,11 +97,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{url}}bug/list/?status=any",
+					"raw": "{{url}}/bug/list/?status=any",
 					"host": [
-						"{{url}}bug"
+						"{{url}}"
 					],
 					"path": [
+						"bug",
 						"list",
 						""
 					],
@@ -116,7 +120,23 @@
 			"name": "Get bug",
 			"request": {
 				"method": "GET",
-				"header": []
+				"header": [],
+				"url": {
+					"raw": "{{url}}/bug/?bugid=c50a601e-a34d-429f-b1be-ec5f7c85fadb",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"bug",
+						""
+					],
+					"query": [
+						{
+							"key": "bugid",
+							"value": "c50a601e-a34d-429f-b1be-ec5f7c85fadb"
+						}
+					]
+				}
 			},
 			"response": []
 		},
@@ -135,11 +155,12 @@
 					}
 				},
 				"url": {
-					"raw": "{{url}}bug/",
+					"raw": "{{url}}/bug/",
 					"host": [
-						"{{url}}bug"
+						"{{url}}"
 					],
 					"path": [
+						"bug",
 						""
 					]
 				}
@@ -152,11 +173,12 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{url}}bug/assign/?userid=65db70f0-6657-40ec-8650-bfc194ca88a8&bugid=19a3edb6-e684-4568-a69e-a1e79a41ef9b",
+					"raw": "{{url}}/bug/assign/?userid=65db70f0-6657-40ec-8650-bfc194ca88a8&bugid=19a3edb6-e684-4568-a69e-a1e79a41ef9b",
 					"host": [
-						"{{url}}bug"
+						"{{url}}"
 					],
 					"path": [
+						"bug",
 						"assign",
 						""
 					],
@@ -180,11 +202,12 @@
 				"method": "POST",
 				"header": [],
 				"url": {
-					"raw": "{{url}}bug/close/?bugid=19a3edb6-e684-4568-a69e-a1e79a41ef9b",
+					"raw": "{{url}}/bug/close/?bugid=19a3edb6-e684-4568-a69e-a1e79a41ef9b",
 					"host": [
-						"{{url}}bug"
+						"{{url}}"
 					],
 					"path": [
+						"bug",
 						"close",
 						""
 					],
@@ -222,7 +245,7 @@
 	"variable": [
 		{
 			"key": "url",
-			"value": "http://0.0.0.0:80/",
+			"value": "http://0.0.0.0:80",
 			"type": "string"
 		}
 	]
