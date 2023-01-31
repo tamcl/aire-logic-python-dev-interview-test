@@ -5,7 +5,7 @@ os.environ.update()
 
 from pydantic import BaseModel
 
-DATABASE_SOURCE="bug_tracker.db"
+DATABASE_SOURCE = "bug_tracker.db"
 
 
 class LogConfig(BaseModel):

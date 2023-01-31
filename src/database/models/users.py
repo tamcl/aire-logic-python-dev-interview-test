@@ -1,24 +1,26 @@
-from pydantic import BaseModel
-from pydantic import validator, ValidationError, Field, PrivateAttr
-from src.database.DBFunctions import insert_df_to_table, check_table_exists
+import logging
+import re
+from typing import Optional
+from uuid import uuid4
+
+import jinja2
+import pandas as pd
+from pydantic import BaseModel, Field, PrivateAttr, ValidationError, validator
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+
 # from src.database.routes.UserDBFunctions import check_user_exists, get_user
 from config import DATABASE_SOURCE
-from typing import Optional
-import pandas as pd
-import jinja2
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String
+from src.database.DBFunctions import check_table_exists, insert_df_to_table
 
-import re
-from uuid import uuid4
-import logging
-
-USER_TABLENAME = 'user'
+USER_TABLENAME = "user"
 
 
 class UserBase(BaseModel):
     username: Optional[str] = None
-    email: Optional[str] = Field(None, regex="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+    email: Optional[str] = Field(
+        None, regex="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+    )
 
     # password: Optional[str]  # normally password should be hashed for security reasons
     #
@@ -49,6 +51,3 @@ class User(UserBase):
             pass
 
         return str(uuid4())
-
-
-

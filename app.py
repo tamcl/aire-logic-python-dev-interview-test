@@ -1,5 +1,5 @@
-import sqlite3
 import logging
+import sqlite3
 
 logging.basicConfig(
     format="%(levelname)s: %(asctime)s - %(message)s",

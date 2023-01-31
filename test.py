@@ -5,10 +5,20 @@ from datetime import datetime
 
 import pandas as pd
 
-from src.database.DBFunctions import (check_table_exists,
-                                      create_table, execute_query,
-                                      insert_df_to_table,  query_to_df)
-from src.database.routes.UserDBFunctions import check_user_exists, get_user, update_user, validate_user, create_user
+from src.database.DBFunctions import (
+    check_table_exists,
+    create_table,
+    execute_query,
+    insert_df_to_table,
+    query_to_df,
+)
+from src.database.routes.UserDBFunctions import (
+    check_user_exists,
+    get_user,
+    update_user,
+    validate_user,
+    create_user,
+)
 from src.test.user_test import user_test
 from src.test.bug_test import bug_test
 
@@ -19,26 +29,26 @@ logging.basicConfig(
     level=logging.DEBUG,
     datefmt="%Y-%m-%d %H:%M:%S",
 )
-logging.info('reseting files')
-remove_file = ['./bug_tracker.db']
+logging.info("reseting files")
+remove_file = ["./bug_tracker.db"]
 for i in remove_file:
-    logging.info(f'removing {i}')
+    logging.info(f"removing {i}")
     if os.path.basename(i) in os.listdir(os.path.dirname(i)):
         os.remove(i)
 
 
 user_test()
 # logging.info(query_to_df('bug_tracker.db','SELECT * from users').to_dict('records'))
-userid_list = list(query_to_df('bug_tracker.db','SELECT uuid from users').to_dict('series').get('uuid'))
+userid_list = list(
+    query_to_df("bug_tracker.db", "SELECT uuid from users")
+    .to_dict("series")
+    .get("uuid")
+)
 bug_test(*userid_list)
 # logging.info(query_to_df('bug_tracker.db','SELECT * from bugs').to_dict('records'))
 
 
-
-
-
-
-#==================
+# ==================
 # if not check_table_exists('bug_tracker.db', 'user'):
 #     create_table('bug_tracker.db', 'user', [
 #         'uuid VARCHAR(225) PRIMARY KEY',
@@ -47,7 +57,7 @@ bug_test(*userid_list)
 #         'password VARCHAR(255)'
 #     ])
 # query = """"""
-#==================
+# ==================
 # user4 = dict(
 #     username="hello4",
 #     email="hello4@example.com",
@@ -65,4 +75,3 @@ bug_test(*userid_list)
 #
 # USER_TABLE_PARAM = ['user', 'something'] + USER_TABLE
 # test_function(*USER_TABLE_PARAM)
-

@@ -1,6 +1,7 @@
-import sqlite3
-import jinja2
 import logging
+import sqlite3
+
+import jinja2
 import pandas as pd
 
 USER_TABLENAME = "users"
@@ -8,7 +9,7 @@ USER_TABLENAME = "users"
 # BUG_UPDATE_TABLE = "bug_updates"
 
 
-def get_connection(sqlite_server='bug_tracker.db'):
+def get_connection(sqlite_server="bug_tracker.db"):
     return sqlite3.connect(sqlite_server)
 
 
@@ -34,7 +35,9 @@ def execute_query(sqlite_db_path: str, query: str):
     return query_results
 
 
-def insert_df_to_table(sqlite_db_path: str, table: str, df: pd.DataFrame, if_exists='append'):
+def insert_df_to_table(
+    sqlite_db_path: str, table: str, df: pd.DataFrame, if_exists="append"
+):
     if sqlite_db_path:
         conn = get_connection(sqlite_db_path)
     else:
@@ -59,10 +62,7 @@ def query_to_df(sqlite_db_path: str, query: str):
 
 
 def create_table(sqlite_db_path, table_name: str, column_details: list):
-    query_param = dict(
-        table_name=table_name,
-        columns=column_details
-    )
+    query_param = dict(table_name=table_name, columns=column_details)
     query = """
     CREATE TABLE {{table_name}}
     (
@@ -83,8 +83,3 @@ def check_table_exists(sqlite_db_path: str, table: str):
     if not listOfTables:
         return False
     return True
-
-
-
-
-
