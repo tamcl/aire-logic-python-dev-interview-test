@@ -27,7 +27,7 @@ This code runs in Python 3.9
 pip install -r requirements.txt
 ```
 
-Activate api (everything in the code is hardcoded for http://0.0.0.0:80/)
+Activate api (everything in the code is hardcoded for http://0.0.0.0:80/) (it is located in src.api.api)
 ```commandline
 uvicorn src.api.api:app --host 0.0.0.0 --port 80
 ```
@@ -41,3 +41,4 @@ python test.py
 ```
 
 Please refer to example directory to use command lines, there's a postman collection as a reference.
+The testing is not the best, but tests all the functionality of all API end points
