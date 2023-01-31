@@ -1,0 +1,229 @@
+{
+	"info": {
+		"_postman_id": "f89bc1d5-c8b5-4433-bc91-0275537a89b6",
+		"name": "Arie-logic",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18708858"
+	},
+	"item": [
+		{
+			"name": "Create user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"example_user1\",\n    \"email\": \"user1@example.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}user/",
+					"host": [
+						"{{url}}user"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update username",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"example_user1\",\n    \"email\": \"user1@example.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}user/update/?newUsername=example_user1_updated",
+					"host": [
+						"{{url}}user"
+					],
+					"path": [
+						"update",
+						""
+					],
+					"query": [
+						{
+							"key": "newUsername",
+							"value": "example_user1_updated"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}user/?username=example_user1_updated",
+					"host": [
+						"{{url}}user"
+					],
+					"path": [
+						""
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "example_user1_updated"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get list of bug",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}bug/list/?status=any",
+					"host": [
+						"{{url}}bug"
+					],
+					"path": [
+						"list",
+						""
+					],
+					"query": [
+						{
+							"key": "status",
+							"value": "any"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get bug",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Create bug",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\":\"place bug title here\",\n    \"description\":\"place bug description in here\",\n    \"createdBy\": \"65db70f0-6657-40ec-8650-bfc194ca88a8\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}bug/",
+					"host": [
+						"{{url}}bug"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Assign bug",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}bug/assign/?userid=65db70f0-6657-40ec-8650-bfc194ca88a8&bugid=19a3edb6-e684-4568-a69e-a1e79a41ef9b",
+					"host": [
+						"{{url}}bug"
+					],
+					"path": [
+						"assign",
+						""
+					],
+					"query": [
+						{
+							"key": "userid",
+							"value": "65db70f0-6657-40ec-8650-bfc194ca88a8"
+						},
+						{
+							"key": "bugid",
+							"value": "19a3edb6-e684-4568-a69e-a1e79a41ef9b"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Close bug",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{url}}bug/close/?bugid=19a3edb6-e684-4568-a69e-a1e79a41ef9b",
+					"host": [
+						"{{url}}bug"
+					],
+					"path": [
+						"close",
+						""
+					],
+					"query": [
+						{
+							"key": "bugid",
+							"value": "19a3edb6-e684-4568-a69e-a1e79a41ef9b"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://0.0.0.0:80/",
+			"type": "string"
+		}
+	]
+}

@@ -1,10 +1,13 @@
-
 import jinja2
 import pandas as pd
 
-from src.database.DBFunctions import (check_table_exists, create_table,
-                                      execute_query, insert_df_to_table,
-                                      query_to_df)
+from src.database.DBFunctions import (
+    check_table_exists,
+    create_table,
+    execute_query,
+    insert_df_to_table,
+    query_to_df,
+)
 from src.database.models.users import User
 
 USER_TABLENAME = "users"

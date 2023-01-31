@@ -22,22 +22,22 @@ There are 6 key areas that the dev marking your test will look at, they are:
  - Testing
 
 ---
-This code runs in 3.9
+This code runs in Python 3.9
 ```commandline
 pip install -r requirements.txt
 ```
 
-Activate api
+Activate api (everything in the code is hardcoded for http://0.0.0.0:80/)
 ```commandline
 uvicorn src.api.api:app --host 0.0.0.0 --port 80
 ```
+After starting the server for the api
 
-Run test unit
+Please use http://0.0.0.0:80/docs to access the swagger doc
+
+Run unit test (!!everytime it runs, it will reset the database!!)
 ```commandline
 python test.py
 ```
 
-Open Client
-```commandline
---
-```
+Please refer to example directory to use command lines, there's a postman collection as a reference.

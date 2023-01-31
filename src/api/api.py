@@ -10,10 +10,15 @@ from pydantic_sqlite import DataBase
 from config import DATABASE_SOURCE, LogConfig
 from src.database.models.bugs import Bug
 from src.database.models.users import User, UserBase
-from src.database.routes.BugDBFunctions import (ListBug, assign_bug, close_bug,
-                                                create_bug, get_bug, list_bug)
-from src.database.routes.UserDBFunctions import (create_user, get_user,
-                                                 update_user)
+from src.database.routes.BugDBFunctions import (
+    ListBug,
+    assign_bug,
+    close_bug,
+    create_bug,
+    get_bug,
+    list_bug,
+)
+from src.database.routes.UserDBFunctions import create_user, get_user, update_user
 
 dictConfig(LogConfig().dict())
 logger = logging.getLogger("bug_tracker_api")
@@ -41,9 +46,11 @@ async def create_user_(
     except ValidationError as e:
         logger.error(e)
         return JSONResponse(status_code=400, content=repr(e))
+    except ValueError as e:
+        return JSONResponse(status_code=500, content=repr(e))
 
 
-@app.get("/user/{username}", tags=["users"], response_model=User)
+@app.get("/user/", tags=["users"], response_model=User)
 async def get_user_(username: str):
     """
         Retrieve user details

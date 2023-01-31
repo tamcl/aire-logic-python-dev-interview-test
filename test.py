@@ -1,9 +1,7 @@
 import logging
 import os
 
-from src.database.DBFunctions import (
-    query_to_df,
-)
+from src.database.DBFunctions import query_to_df
 
 from src.test.user_test import user_test
 from src.test.bug_test import bug_test

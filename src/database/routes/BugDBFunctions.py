@@ -5,12 +5,15 @@ import jinja2
 import pandas as pd
 from pydantic import BaseModel
 
-from src.database.DBFunctions import (check_table_exists, create_table,
-                                      execute_query, insert_df_to_table,
-                                      query_to_df)
+from src.database.DBFunctions import (
+    check_table_exists,
+    create_table,
+    execute_query,
+    insert_df_to_table,
+    query_to_df,
+)
 from src.database.models.bugs import Bug
-from src.database.routes.UserDBFunctions import (USER_TABLENAME,
-                                                 check_user_exists)
+from src.database.routes.UserDBFunctions import USER_TABLENAME, check_user_exists
 
 BUG_TABLENAME = "bugs"
 
