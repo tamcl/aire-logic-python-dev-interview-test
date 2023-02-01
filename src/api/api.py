@@ -132,7 +132,9 @@ async def create_bug_(
         create_bug(DATABASE_SOURCE, bug)
         return JSONResponse(status_code=200, content=bug.dict())
     except ValidationError as e:
-        return JSONResponse(status_code=400, content={repr(e)})
+        return JSONResponse(status_code=400, content={"error":repr(e)})
+    except ValueError as e:
+        return JSONResponse(status_code=400, content={"error":repr(e)})
 
 
 @app.post("/bug/assign/", tags=["bugs"], response_model=Bug)

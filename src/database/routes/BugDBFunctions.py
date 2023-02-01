@@ -61,6 +61,9 @@ def create_bug(sqlite_db_path: str, bug: Bug, table: str = BUG_TABLENAME) -> Non
     if not check_table_exists(sqlite_db_path, table):
         logging.info(f"Table {table} does not exists, create {table} table")
         create_bug_table(sqlite_db_path, table)
+    if not check_user_exists(sqlite_db_path, {"uuid":bug.dict().get('createdBy')}):
+        logging.error("User does not exists")
+        raise ValueError("created by user not found")
     df = pd.DataFrame.from_dict({k: [v] for k, v in bug.dict().items()})
     logging.info(bug.dict())
     try:

@@ -30,6 +30,10 @@ def create_bug_test_3(userid):
     bug_details = dict(title="bug test 3", description="should fail", createdBy=userid,)
     return requests.post(os.path.join(BASE_URL, "bug/"), json=bug_details).json()
 
+def create_bug_test_4():
+    bug_details = dict(title="bug test 3", description="should fail because of the createdby", createdBy="fail")
+    return requests.post(os.path.join(BASE_URL, "bug/"), json=bug_details).json()
+
 
 def assign_bug_test_1(bugid, userid):
     url_param = dict(bugid=bugid, userid=userid)
@@ -65,6 +69,7 @@ def bug_test(userid_1, userid_2):
     logging.info(create_bug_test_2_results)
     bug_id_2 = create_bug_test_2_results.get("uuid")
     logging.info(create_bug_test_3(userid_1))
+    logging.info(create_bug_test_4())
 
     logging.info("Assign test")
     logging.info(assign_bug_test_1(bug_id_1, userid_2))
